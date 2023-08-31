@@ -1,0 +1,28 @@
+version: '3.3'
+services:
+  app:
+    depends_on:
+      - redis
+    build: ./app
+    expose:
+      - 8089
+    environment:
+      - APP_ADDRESS=app:8089
+      - REDIS_ADDRESS=redis:6379
+      - REDIS_USERNAME=avito
+      - REDIS_PASSWORD=avito
+  redis:
+    build: ./redis
+    expose:
+      - 6379
+    volumes:
+      - redis:/data
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - app
+      - redis
+volumes:
+  redis:
